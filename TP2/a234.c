@@ -7,6 +7,35 @@
 #define max(a,b) ((a)>(b)?(a):(b))
 
 
+Arbre234 get_fils(Arbre234 a, int fils) {
+    switch (a->t) {
+        case 4:
+            return a->fils[fils];
+        case 3:
+            return fils >= 3 ? NULL : a->fils[fils];
+        case 2:
+            return fils >= 2 ? NULL : a->fils[fils + 1];
+        default:
+            return NULL;
+    }
+}
+
+
+int get_cle(Arbre234 a, int cle) {
+    //pas besoin de break car on a les returns.
+    switch (a->t) {
+        case 4:
+            return a->cles[cle];
+        case 3:
+            return cle >= 2 ? -1 : a->cles[cle];
+        case 2:
+            return a->cles[1];
+        default:
+            return -1;
+    }
+}
+
+
 int hauteur (Arbre234 a)
 {
   int h0, h1, h2, h3 ;
@@ -42,34 +71,25 @@ int NombreCles (Arbre234 a)
   return 0 ;
 }
 
-int CleMax (Arbre234 a)
-{
-  /*
-     plus grande cle de l'arbre a
-  */
-  
-  return 0 ;
-}
-
 int CleMax(Arbre234 a) {
-    if (a == NULL) {
-        return NULL;
-    } else if (a->t < 2) {
-        return a->cles[1];
-    } else {
-        if(a->t == 2)
-            return CleMax(a->fils[2]);
-        else
-            return CleMax(a->fils[3]);
+    Arbre234 temp = a;
+    int cleMax;
+
+    while (temp->fils[1]->t != 0) {
+        temp = get_fils(temp, temp->t - 1);
     }
+
+    return get_cle(temp, temp->t - 2);
 }
 
 int CleMin(Arbre234 a) {
-    /*
-       Retourne plus petite cle de l'arbre a
-    */
+    Arbre234 temp = a;
+    int cleMax;
 
-    return 0;
+    while (temp->fils[1]->t != 0) {
+        temp = get_fils(temp, 0);
+    }
+    return get_cle(temp, 0);
 }
 
 Arbre234 RechercherCle (Arbre234 a, int cle)
@@ -175,23 +195,23 @@ void Detruire_Cle (Arbre234 *a, int cle)
 
 
 
-void voir(a,int b){
+void voir(Arbre234 a,int b){
   printf ("==== Afficher arbre ====\n") ;
   afficher_arbre (a, 0) ;
 }
 
-void nrbcle(a){
+void nrbcle(Arbre234 a){
   printf ("==== Le nombre de cles dans l'arbre ====\n") ;
   int nbrCles=NombreCles(a);
   printf("%d cles dans l'arbre\n",nbrCles);
 }
 
-void analys(a){
+void analys(Arbre234 a){
   printf ("==== Voici l'analyse complète de l'arbre ====\n") ;
   int *feuilles=0;
   int *noeud2=0;
   int *noeud3=0;
-  int *noeud4=0:
+  int *noeud4=0;
   AnalyseStructureArbre(a,feuilles,noeud2,noeud3,noeud4);
   printf("L'arbre possède %d feuilles, %d noeud2, %d noeud3, %d noeud4\n",feuilles,noeud2,noeud3,noeud4);
 }
