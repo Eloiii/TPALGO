@@ -27,11 +27,19 @@ int hauteur (Arbre234 a)
 
 int NombreCles (Arbre234 a)
 {
-  /*
-     Retourne le nombre de cles presentes dans l'arbre a
-  */
-  
-  return 0 ;
+  if (a!= NULL && a->t !=0){
+    int res=a->t - 1;
+    if (a->t==2){
+      return NombreCles(a->Fils[1])+NombreCles(a->Fils[2])+res;
+    }
+    else if (a->t==3){
+      return NombreCles(a->Fils[1])+NombreCles(a->Fils[2])+NombreCles(a->Fils[3])+res
+    }
+    else if (a->t==4){
+      return NombreCles(a->Fils[1])+NombreCles(a->Fils[2])+NombreCles(a->Fils[3])+NombreCles(a->Fils[4])+res
+    }
+  }
+  return -1 ;
 }
 
 int CleMax (Arbre234 a)
