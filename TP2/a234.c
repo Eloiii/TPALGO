@@ -30,16 +30,16 @@ int NombreCles (Arbre234 a)
   if (a!= NULL && a->t !=0){
     int res=a->t - 1;
     if (a->t==2){
-      return NombreCles(a->Fils[1])+NombreCles(a->Fils[2])+res;
+      return NombreCles(a->fils[1])+NombreCles(a->fils[2])+res;
     }
     else if (a->t==3){
-      return NombreCles(a->Fils[1])+NombreCles(a->Fils[2])+NombreCles(a->Fils[3])+res
+      return NombreCles(a->fils[1])+NombreCles(a->fils[2])+NombreCles(a->fils[3])+res;
     }
     else if (a->t==4){
-      return NombreCles(a->Fils[1])+NombreCles(a->Fils[2])+NombreCles(a->Fils[3])+NombreCles(a->Fils[4])+res
+      return NombreCles(a->fils[1])+NombreCles(a->fils[2])+NombreCles(a->fils[3])+NombreCles(a->fils[4])+res;
     }
   }
-  return -1 ;
+  return 0 ;
 }
 
 int CleMax (Arbre234 a)
@@ -144,5 +144,7 @@ int main (int argc, char **argv)
   printf ("==== Afficher arbre ====\n") ;
   
   afficher_arbre (a, 0) ;
+  int nbrCles=NombreCles(a);
+  printf("%d cles dans l'arbre\n",nbrCles);
 
 }
