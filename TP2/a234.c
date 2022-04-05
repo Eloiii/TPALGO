@@ -7,6 +7,35 @@
 #define max(a,b) ((a)>(b)?(a):(b))
 
 
+Arbre234 get_fils(Arbre234 a, int fils) {
+    switch (a->t) {
+        case 4:
+            return a->fils[fils];
+        case 3:
+            return fils >= 3 ? NULL : a->fils[fils];
+        case 2:
+            return fils >= 2 ? NULL : a->fils[fils + 1];
+        default:
+            return NULL;
+    }
+}
+
+
+int get_cle(Arbre234 a, int cle) {
+    //pas besoin de break car on a les returns.
+    switch (a->t) {
+        case 4:
+            return a->cles[cle];
+        case 3:
+            return cle >= 2 ? -1 : a->cles[cle];
+        case 2:
+            return a->cles[1];
+        default:
+            return -1;
+    }
+}
+
+
 int hauteur (Arbre234 a)
 {
   int h0, h1, h2, h3 ;
@@ -43,24 +72,22 @@ int NombreCles (Arbre234 a)
 }
 
 int CleMax(Arbre234 a) {
-    if (a == NULL) {
-        return NULL;
-    } else if (a->t < 2) {
-        return a->cles[1];
-    } else {
-        if(a->t == 2)
-            return CleMax(a->fils[2]);
-        else
-            return CleMax(a->fils[3]);
+    Arbre234 temp = a;
+
+    while (temp->fils[1]->t != 0) {
+        temp = get_fils(temp, temp->t - 1);
     }
+
+    return get_cle(temp, temp->t - 2);
 }
 
 int CleMin(Arbre234 a) {
-    /*
-       Retourne plus petite cle de l'arbre a
-    */
+    Arbre234 temp = a;
 
-    return 0;
+    while (temp->fils[1]->t != 0) {
+        temp = get_fils(temp, 0);
+    }
+    return get_cle(temp, 0);
 }
 
 Arbre234 RechercherCle (Arbre234 a, int cle)
