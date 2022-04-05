@@ -144,5 +144,7 @@ int main (int argc, char **argv)
   printf ("==== Afficher arbre ====\n") ;
   
   afficher_arbre (a, 0) ;
+  int nbrCles=NombreCles(a);
+  printf("%d cles dans l'arbre\n",nbrCles);
 
 }
