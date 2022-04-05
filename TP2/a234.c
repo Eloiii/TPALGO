@@ -108,7 +108,7 @@ int feuille(Arbre234 a){
 
 void AnalyseStructureArbre (Arbre234 a, int *feuilles, int *noeud2, int *noeud3, int *noeud4)
 {
-  if (a != NULL && a->t !=0) {
+  if (a != NULL) {
 
         if (a->t == 2) {
             (*noeud2)++;
@@ -195,7 +195,7 @@ void Detruire_Cle (Arbre234 *a, int cle)
 
 
 
-void voir(Arbre234 a,int b){
+void voir(Arbre234 a){
   printf ("==== Afficher arbre ====\n") ;
   afficher_arbre (a, 0) ;
 }
@@ -213,7 +213,7 @@ void analys(Arbre234 a){
   int *noeud3=0;
   int *noeud4=0;
   AnalyseStructureArbre(a,feuilles,noeud2,noeud3,noeud4);
-  printf("L'arbre possède %d feuilles, %d noeud2, %d noeud3, %d noeud4\n",feuilles,noeud2,noeud3,noeud4);
+  printf("L'arbre possède %ls feuilles, %ls noeud2, %ls noeud3, %ls noeud4\n",feuilles,noeud2,noeud3,noeud4);
 }
 
 int main (int argc, char **argv)
@@ -227,7 +227,7 @@ int main (int argc, char **argv)
     }
 
   a = lire_arbre (argv [1]) ;
-  voir(a,0);
+  voir(a);
   nrbcle(a);
   analys(a);
 
