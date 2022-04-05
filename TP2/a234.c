@@ -30,16 +30,16 @@ int NombreCles (Arbre234 a)
   if (a!= NULL && a->t !=0){
     int res=a->t - 1;
     if (a->t==2){
-      return NombreCles(a->Fils[1])+NombreCles(a->Fils[2])+res;
+      return NombreCles(a->fils[1])+NombreCles(a->fils[2])+res;
     }
     else if (a->t==3){
-      return NombreCles(a->Fils[1])+NombreCles(a->Fils[2])+NombreCles(a->Fils[3])+res
+      return NombreCles(a->fils[1])+NombreCles(a->fils[2])+NombreCles(a->fils[3])+res;
     }
     else if (a->t==4){
-      return NombreCles(a->Fils[1])+NombreCles(a->Fils[2])+NombreCles(a->Fils[3])+NombreCles(a->Fils[4])+res
+      return NombreCles(a->fils[1])+NombreCles(a->fils[2])+NombreCles(a->fils[3])+NombreCles(a->fils[4])+res;
     }
   }
-  return -1 ;
+  return 0 ;
 }
 
 int CleMax (Arbre234 a)
@@ -82,11 +82,46 @@ Arbre234 RechercherCle (Arbre234 a, int cle)
   return NULL ;
 }
 
+int feuille(Arbre234 a){
+  return a->t == 0;
+}
+
 void AnalyseStructureArbre (Arbre234 a, int *feuilles, int *noeud2, int *noeud3, int *noeud4)
 {
-  /* 
-     calculer le nombre de feuilles, de 2-noeuds, 3-noeuds,et 4-noeuds
-  */
+  if (a != NULL && a->t !=0) {
+
+        if (a->t == 2) {
+            (*noeud2)++;
+            if (!feuille(a->fils[1])) {
+                AnalyseStructureArbre(a->fils[1], feuilles, noeud2, noeud3, noeud4);
+                AnalyseStructureArbre(a->fils[2], feuilles, noeud2, noeud3, noeud4);
+            } else {
+                (*feuilles)++;
+            }
+        } else if (a->t == 3) {
+            (*noeud3)++;
+            if (!feuille(a->fils[1])) {
+                AnalyseStructureArbre(a->fils[0], feuilles, noeud2, noeud3, noeud4);
+                AnalyseStructureArbre(a->fils[1], feuilles, noeud2, noeud3, noeud4);
+                AnalyseStructureArbre(a->fils[2], feuilles, noeud2, noeud3, noeud4);
+            } else {
+                (*feuilles)++;
+            }
+        } else if (a->t == 4) {
+            (*noeud4)++;
+            if (!feuille(a->fils[1])) {
+                AnalyseStructureArbre(a->fils[0], feuilles, noeud2, noeud3, noeud4);
+                AnalyseStructureArbre(a->fils[1], feuilles, noeud2, noeud3, noeud4);
+                AnalyseStructureArbre(a->fils[2], feuilles, noeud2, noeud3, noeud4);
+                AnalyseStructureArbre(a->fils[3], feuilles, noeud2, noeud3, noeud4);
+            } else {
+                (*feuilles)++;
+            }
+        }
+        
+    } else {
+        (*feuilles)++;
+    }
 }
 
 Arbre234 noeud_max (Arbre234 a)
@@ -156,6 +191,8 @@ int main (int argc, char **argv)
   printf ("==== Afficher arbre ====\n") ;
   
   afficher_arbre (a, 0) ;
+  int nbrCles=NombreCles(a);
+  printf("%d cles dans l'arbre\n",nbrCles);
 
     printf("%d\n", CleMax(a));
 
