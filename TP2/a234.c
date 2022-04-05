@@ -30,24 +30,15 @@ int NombreCles (Arbre234 a)
   if (a!= NULL && a->t !=0){
     int res=a->t - 1;
     if (a->t==2){
-      return NombreCles(a->fils[1])+NombreCles(a->fils[2])+res;
+      return res + NombreCles(a->fils[0])+NombreCles(a->fils[1]);
     }
     else if (a->t==3){
-      return NombreCles(a->fils[1])+NombreCles(a->fils[2])+NombreCles(a->fils[3])+res;
+      return res + NombreCles(a->fils[0])+NombreCles(a->fils[1])+NombreCles(a->fils[2]);
     }
     else if (a->t==4){
-      return NombreCles(a->fils[1])+NombreCles(a->fils[2])+NombreCles(a->fils[3])+NombreCles(a->fils[4])+res;
+      return res + NombreCles(a->fils[0])+NombreCles(a->fils[1])+NombreCles(a->fils[2])+NombreCles(a->fils[3]);
     }
   }
-  return 0 ;
-}
-
-int CleMax (Arbre234 a)
-{
-  /*
-     plus grande cle de l'arbre a
-  */
-  
   return 0 ;
 }
 
@@ -96,7 +87,7 @@ void AnalyseStructureArbre (Arbre234 a, int *feuilles, int *noeud2, int *noeud3,
                 AnalyseStructureArbre(a->fils[1], feuilles, noeud2, noeud3, noeud4);
                 AnalyseStructureArbre(a->fils[2], feuilles, noeud2, noeud3, noeud4);
             } else {
-                (*feuilles)++;
+                (*feuilles)=*feuilles+2;
             }
         } else if (a->t == 3) {
             (*noeud3)++;
@@ -105,7 +96,7 @@ void AnalyseStructureArbre (Arbre234 a, int *feuilles, int *noeud2, int *noeud3,
                 AnalyseStructureArbre(a->fils[1], feuilles, noeud2, noeud3, noeud4);
                 AnalyseStructureArbre(a->fils[2], feuilles, noeud2, noeud3, noeud4);
             } else {
-                (*feuilles)++;
+                (*feuilles)=*feuilles+3;
             }
         } else if (a->t == 4) {
             (*noeud4)++;
@@ -115,7 +106,7 @@ void AnalyseStructureArbre (Arbre234 a, int *feuilles, int *noeud2, int *noeud3,
                 AnalyseStructureArbre(a->fils[2], feuilles, noeud2, noeud3, noeud4);
                 AnalyseStructureArbre(a->fils[3], feuilles, noeud2, noeud3, noeud4);
             } else {
-                (*feuilles)++;
+                (*feuilles)=*feuilles+4;
             }
         }
         
@@ -188,12 +179,16 @@ void nrbcle(Arbre234 a){
 
 void analys(Arbre234 a){
   printf ("==== Voici l'analyse complète de l'arbre ====\n") ;
-  int *feuilles=0;
-  int *noeud2=0;
-  int *noeud3=0;
-  int *noeud4=0;
+  int *feuilles=malloc(sizeof(int));
+  int *noeud2=malloc(sizeof(int));
+  int *noeud3=malloc(sizeof(int));
+  int *noeud4=malloc(sizeof(int));
+  *feuilles=0;
+  *noeud2=0;
+  *noeud3=0;
+  *noeud4=0;
   AnalyseStructureArbre(a,feuilles,noeud2,noeud3,noeud4);
-  printf("L'arbre possède %ls feuilles, %ls noeud2, %ls noeud3, %ls noeud4\n",feuilles,noeud2,noeud3,noeud4);
+  printf("L'arbre possède %d feuilles, %d noeud2, %d noeud3, %d noeud4\n",*feuilles,*noeud2,*noeud3,*noeud4);
 }
 
 int main (int argc, char **argv)
