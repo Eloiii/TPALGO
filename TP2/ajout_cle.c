@@ -317,7 +317,7 @@ void ajouter_cle (Arbre234 *a, int cle, int niveau, Arbre234 pere)
   
   if (c->t == 3)
     {
-      // deux cles dans le noeud
+      // deux get_cle dans le noeud
       
       if (cle > c->cles [1])
 	{
@@ -375,7 +375,7 @@ void ajouter_cle (Arbre234 *a, int cle, int niveau, Arbre234 pere)
     } // c->t == 3
 
   
-  // trois cles dans le noeud courant
+  // trois get_cle dans le noeud courant
   // Le noeud doit etre eclate
   // c->t == 4
 

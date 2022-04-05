@@ -51,13 +51,25 @@ int CleMax (Arbre234 a)
   return 0 ;
 }
 
-int CleMin (Arbre234 a)
-{
-  /*
-     Retourne plus petite cle de l'arbre a
-  */
+int CleMax(Arbre234 a) {
+    if (a == NULL) {
+        return NULL;
+    } else if (a->t < 2) {
+        return a->cles[1];
+    } else {
+        if(a->t == 2)
+            return CleMax(a->fils[2]);
+        else
+            return CleMax(a->fils[3]);
+    }
+}
 
-  return 0 ;
+int CleMin(Arbre234 a) {
+    /*
+       Retourne plus petite cle de l'arbre a
+    */
+
+    return 0;
 }
 
 Arbre234 RechercherCle (Arbre234 a, int cle)
@@ -199,5 +211,7 @@ int main (int argc, char **argv)
   nrbcle(a);
   analys(a);
 
+
+    printf("%d\n", CleMax(a));
 
 }
