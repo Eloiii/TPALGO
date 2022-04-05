@@ -163,6 +163,26 @@ void Detruire_Cle (Arbre234 *a, int cle)
 
 
 
+void voir(a,int b){
+  printf ("==== Afficher arbre ====\n") ;
+  afficher_arbre (a, 0) ;
+}
+
+void nrbcle(a){
+  printf ("==== Le nombre de cles dans l'arbre ====\n") ;
+  int nbrCles=NombreCles(a);
+  printf("%d cles dans l'arbre\n",nbrCles);
+}
+
+void analys(a){
+  printf ("==== Voici l'analyse complète de l'arbre ====\n") ;
+  int *feuilles=0;
+  int *noeud2=0;
+  int *noeud3=0;
+  int *noeud4=0:
+  AnalyseStructureArbre(a,feuilles,noeud2,noeud3,noeud4);
+  printf("L'arbre possède %d feuilles, %d noeud2, %d noeud3, %d noeud4\n",feuilles,noeud2,noeud3,noeud4);
+}
 
 int main (int argc, char **argv)
 {
@@ -175,11 +195,9 @@ int main (int argc, char **argv)
     }
 
   a = lire_arbre (argv [1]) ;
+  voir(a,0);
+  nrbcle(a);
+  analys(a);
 
-  printf ("==== Afficher arbre ====\n") ;
-  
-  afficher_arbre (a, 0) ;
-  int nbrCles=NombreCles(a);
-  printf("%d cles dans l'arbre\n",nbrCles);
 
 }
