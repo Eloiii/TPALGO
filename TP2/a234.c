@@ -73,7 +73,6 @@ int NombreCles (Arbre234 a)
 
 int CleMax(Arbre234 a) {
     Arbre234 temp = a;
-    int cleMax;
 
     while (temp->fils[1]->t != 0) {
         temp = get_fils(temp, temp->t - 1);
@@ -84,7 +83,6 @@ int CleMax(Arbre234 a) {
 
 int CleMin(Arbre234 a) {
     Arbre234 temp = a;
-    int cleMax;
 
     while (temp->fils[1]->t != 0) {
         temp = get_fils(temp, 0);
