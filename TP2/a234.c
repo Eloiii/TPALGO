@@ -70,11 +70,46 @@ Arbre234 RechercherCle (Arbre234 a, int cle)
   return NULL ;
 }
 
+int feuille(Arbre234 a){
+  return a->t == 0;
+}
+
 void AnalyseStructureArbre (Arbre234 a, int *feuilles, int *noeud2, int *noeud3, int *noeud4)
 {
-  /* 
-     calculer le nombre de feuilles, de 2-noeuds, 3-noeuds,et 4-noeuds
-  */
+  if (a != NULL && a->t !=0) {
+
+        if (a->t == 2) {
+            (*noeud2)++;
+            if (!feuille(a->fils[1])) {
+                AnalyseStructureArbre(a->fils[1], feuilles, noeud2, noeud3, noeud4);
+                AnalyseStructureArbre(a->fils[2], feuilles, noeud2, noeud3, noeud4);
+            } else {
+                (*feuilles)++;
+            }
+        } else if (a->t == 3) {
+            (*noeud3)++;
+            if (!feuille(a->fils[1])) {
+                AnalyseStructureArbre(a->fils[0], feuilles, noeud2, noeud3, noeud4);
+                AnalyseStructureArbre(a->fils[1], feuilles, noeud2, noeud3, noeud4);
+                AnalyseStructureArbre(a->fils[2], feuilles, noeud2, noeud3, noeud4);
+            } else {
+                (*feuilles)++;
+            }
+        } else if (a->t == 4) {
+            (*noeud4)++;
+            if (!feuille(a->fils[1])) {
+                AnalyseStructureArbre(a->fils[0], feuilles, noeud2, noeud3, noeud4);
+                AnalyseStructureArbre(a->fils[1], feuilles, noeud2, noeud3, noeud4);
+                AnalyseStructureArbre(a->fils[2], feuilles, noeud2, noeud3, noeud4);
+                AnalyseStructureArbre(a->fils[3], feuilles, noeud2, noeud3, noeud4);
+            } else {
+                (*feuilles)++;
+            }
+        }
+        
+    } else {
+        (*feuilles)++;
+    }
 }
 
 Arbre234 noeud_max (Arbre234 a)
