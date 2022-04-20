@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "a234.h"
+#include "file.h"
 
 #define max(a, b) ((a)>(b)?(a):(b))
 
@@ -174,11 +175,18 @@ Arbre234 noeud_max(Arbre234 a) {
 
 
 void Afficher_Cles_Largeur(Arbre234 a) {
-    /*
-      Afficher le cles de l'arbre a avec
-      un parcours en largeur
-    */
-
+    pfile_t f = creer_file();
+    if (a != NULL)
+        enfiler(f, a);
+    while (file_vide(f) != 1) {
+        pnoeud234 temp = defiler(f);
+        for (int i = 0; i < temp->t; i++) {
+            enfiler(f, get_fils(temp, i));
+            if (i < temp->t - 1) {
+                printf("%i ", get_cle(temp, i));
+            }
+        }
+    }
     return;
 }
 
@@ -283,9 +291,10 @@ int main(int argc, char **argv) {
 //  nrbcle(a);
 //  analys(a);
 
-//    noeud_max(a);
+//    afficher_arbre(noeud_max(a), 0);
 //    printf("%d\n", CleMax(a));
 
 //    testRechercheCle(a);
 
+    Afficher_Cles_Largeur(a);
 }
