@@ -2,6 +2,9 @@
 
 /* structure noeud presentee en cours */
 
+#ifndef A234
+
+#define A234
 
 typedef struct n {
   
@@ -22,3 +25,4 @@ void afficher_arbre (Arbre234 a, int niveau) ;
 void ajouter_cle (Arbre234 *a, int cle, int niveau, Arbre234 pere) ;
 
   
+#endif

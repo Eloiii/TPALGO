@@ -191,11 +191,14 @@ void Afficher_Cles_Largeur(Arbre234 a) {
 }
 
 void Affichage_Cles_Triees_Recursive(Arbre234 a) {
-    /*
-       Afficher les cles en ordre croissant
-       Cette fonction sera recursive
-    */
-
+    if (a != NULL && a->t != 0) {
+        for (int i = 0; i <a->t - 1 ; ++i) {
+            Affichage_Cles_Triees_Recursive(get_fils(a, i));
+            printf("%d\n", get_cle(a, i));
+            if(a->t < 3 || i == a->t - 2)
+                Affichage_Cles_Triees_Recursive(get_fils(a, i+1));
+        }
+    }
 }
 
 void Affichage_Cles_Triees_NonRecursive(Arbre234 a) {
@@ -296,5 +299,7 @@ int main(int argc, char **argv) {
 
 //    testRechercheCle(a);
 
-    Afficher_Cles_Largeur(a);
+//    Afficher_Cles_Largeur(a);
+
+    Affichage_Cles_Triees_Recursive(a);
 }
