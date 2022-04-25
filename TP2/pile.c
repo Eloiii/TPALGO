@@ -13,12 +13,11 @@ int detruire_pile(ppile_t p)
 {
     if (p == NULL)
     {
-        return 0; 
+        return 0;
     }
     free(p);
     return 1;
 }
-
 
 int pile_vide(ppile_t p)
 {
@@ -30,7 +29,6 @@ int pile_vide(ppile_t p)
     return pileVide;
 }
 
-
 int pile_pleine(ppile_t p)
 {
     int pilePleine = 0;
@@ -40,7 +38,6 @@ int pile_pleine(ppile_t p)
     }
     return pilePleine;
 }
-
 
 pnoeud234 depiler(ppile_t p)
 {
@@ -60,13 +57,11 @@ int depiler_entier(ppile_t p)
     {
         return -1;
     }
-    int nb_entier = p->tableau[p->top].ent_abr.entier; 
+    int nb_entier = p->tableau[p->top].ent_abr.entier;
     p->tableau[p->top].ent_abr.entier = 0;
     p->top = p->top - 1;
     return nb_entier;
 }
-
-
 
 int empiler(ppile_t p, pnoeud234 pn)
 {
@@ -75,7 +70,7 @@ int empiler(ppile_t p, pnoeud234 pn)
     {
         p->top = p->top + 1;
         p->tableau[p->top].ent_abr.node = pn;
-        p->tableau[p->top].type = TYPE_ARBRE;
+        p->tableau[p->top].type = 0;
         succes = 1;
     }
     return succes;

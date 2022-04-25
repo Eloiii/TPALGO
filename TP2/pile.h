@@ -3,7 +3,7 @@
 #define PILE_H
 
 #define MAX_PILE_SIZE 100
-#define TYPE_ARBRE 0
+
 
 #include "a234.h"
 
