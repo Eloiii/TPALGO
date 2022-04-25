@@ -189,32 +189,6 @@ void AnalyseStructureArbre(Arbre234 a, int *feuilles, int *noeud2, int *noeud3, 
     }
 }
 
-Arbre234 fils(Arbre234 a, int i)
-{
-    switch (a->t)
-    {
-    case 4:
-        return a->fils[i];
-    case 3:
-        if (i >= 3)
-        {
-            return NULL;
-        }
-        return a->fils[i];
-    case 2:
-        if (i >= 2)
-        {
-            return NULL;
-        }
-        else
-        {
-            return a->fils[i + 1];
-        }
-    default:
-        return NULL;
-    }
-}
-
 Arbre234 max_deux_noeuds(Arbre234 a, Arbre234 b)
 {
     int noeudA = 0;
@@ -246,7 +220,7 @@ Arbre234 noeud_max_rec(Arbre234 a, Arbre234 max_noeud)
     {
         for (int i = 0; i < a->t; i++)
         {
-            max_noeud = noeud_max_rec(fils(a, i), max_noeud);
+            max_noeud = noeud_max_rec(get_fils(a, i), max_noeud);
         }
     }
     return max_noeud;
@@ -332,10 +306,10 @@ void Affichage_Cles_Triees_NonRecursive(Arbre234 a)
                 int index = getIndex(arbre_courant);
                 for (int i = 0; i < index; i++)
                 {
-                    empiler(p, fils(arbre_courant, index - i));
+                    empiler(p, get_fils(arbre_courant, index - i));
                     empiler_entier(p, get_cle(arbre_courant, index - 1 - i));
                 }
-                empiler(p, fils(arbre_courant, 0));
+                empiler(p, get_fils(arbre_courant, 0));
             }
         }
     }
