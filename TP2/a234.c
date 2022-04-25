@@ -4,6 +4,7 @@
 
 #include "a234.h"
 #include "file.h"
+#include "pile.h"
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
@@ -283,20 +284,63 @@ void Affichage_Cles_Triees_Recursive(Arbre234 a)
         for (int i = 0; i < a->t - 1; ++i)
         {
             Affichage_Cles_Triees_Recursive(get_fils(a, i));
-            printf("%d\n", get_cle(a, i));
+            printf(" %d |", get_cle(a, i));
             if (a->t < 3 || i == a->t - 2)
                 Affichage_Cles_Triees_Recursive(get_fils(a, i + 1));
         }
     }
 }
 
+int getIndex(Arbre234 a)
+{
+    if (a->t > 0)
+    {
+        return a->t - 1;
+    }
+    else
+    {
+        return a->t;
+    }
+}
+
+int top_type(ppile_t p)
+{
+    if (!pile_vide(p))
+    {
+        return p->tableau[p->top].type;
+    }
+    return -1;
+}
+
 void Affichage_Cles_Triees_NonRecursive(Arbre234 a)
 {
-    /*
-     Afficher les cles en ordre croissant
-     Cette fonction ne sera pas recursive
-     Utiliser une pile
-  */
+    printf("\n");
+    ppile_t p = creer_pile();
+    empiler(p, a);
+    while (!pile_vide(p))
+    {
+        if (top_type(p) == 1)
+        {
+            int courant_int = depiler_entier(p);
+            printf("%d | ", courant_int);
+        }
+        else
+        {
+            Arbre234 arbre_courant = depiler(p);
+            if (arbre_courant != NULL && arbre_courant->t != 0)
+            {
+                int index = getIndex(arbre_courant);
+                for (int i = 0; i < index; i++)
+                {
+                    empiler(p, fils(arbre_courant, index - i));
+                    empiler_entier(p, get_cle(arbre_courant, index - 1 - i));
+                }
+                empiler(p, fils(arbre_courant, 0));
+            }
+        }
+    }
+    printf("\n");
+    detruire_pile(p);
 }
 
 void Detruire_Cle(Arbre234 *a, int cle)
@@ -395,4 +439,5 @@ int main(int argc, char **argv)
     //    Afficher_Cles_Largeur(a);
 
     Affichage_Cles_Triees_Recursive(a);
+    Affichage_Cles_Triees_NonRecursive(a);
 }
