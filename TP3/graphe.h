@@ -16,6 +16,8 @@ typedef struct s
   struct s   *sommet_suivant ; // sommet suivant dans le graphe
   int        couleur ; // couleur du sommet
   int		 explore ; // s'il a déjà été exploré auparavant
+  int distance; // distance au sommet de référence
+  bool marquer; // Sommet visiter ou pas 
 } sommet_t, *psommet_t ;
 
 /*
@@ -35,7 +37,7 @@ typedef struct a {
 /*
   pgraphe_t: pointeur vers le premier sommet d'un graphe
 */
-
+typedef enum {false, true} bool;
 typedef psommet_t pgraphe_t ;
 
 
