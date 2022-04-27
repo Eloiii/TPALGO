@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <limits.h>
 
+#include "file.h"
 #include "graphe.h"
 
 
@@ -170,11 +171,27 @@ int colorier_graphe (pgraphe_t g)
 
 void afficher_graphe_largeur (pgraphe_t g, int r)
 {
-  /*
-    afficher les sommets du graphe avec un parcours en largeur
-  */
-  
-  return ;
+	psommet_t debut = chercher_sommet(g, r);
+	debut->explore = 1;
+
+	pfile_t	f_sommets = creer_file();
+	enfiler(f_sommets, debut);
+	while(!file_vide(f_sommets)) {
+		psommet_t current = defiler(f_sommets);
+		printf("%d\n", current->label);
+		
+		parc_t current_arc = current->liste_arcs;
+		while(current_arc != NULL){
+			if(!current_arc->dest->explore) {
+				enfiler(f_sommets, current_arc->dest);
+				current_arc->dest->explore = 1;
+			}
+			current_arc = current_arc->arc_suivant;
+		}
+		
+	}	
+			
+	return ;
 }
 
 

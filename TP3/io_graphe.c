@@ -30,6 +30,7 @@ void lire_graphe (char * file_name, pgraphe_t *g)
       c = (psommet_t) malloc (sizeof (sommet_t)) ;
       c->sommet_suivant = NULL ;
       c->couleur = 0 ;
+	  c->explore = 0 ;
       
       if (fscanf (f, "%d", &c->label) == EOF)
 	{

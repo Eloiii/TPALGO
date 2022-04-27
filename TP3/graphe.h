@@ -1,4 +1,7 @@
 
+#ifndef GRAPH
+#define GRAPH
+
 typedef struct a *parc_t ;
 
 /*
@@ -12,6 +15,7 @@ typedef struct s
   parc_t     liste_arcs ; // arcs sortants du sommet
   struct s   *sommet_suivant ; // sommet suivant dans le graphe
   int        couleur ; // couleur du sommet
+  int		 explore ; // s'il a déjà été exploré auparavant
 } sommet_t, *psommet_t ;
 
 /*
@@ -57,3 +61,5 @@ void afficher_graphe_profondeur (pgraphe_t g, int r) ;
 void afficher_graphe_largeur (pgraphe_t g, int r) ;
 
 void algo_dijkstra (pgraphe_t g, int r) ;
+
+#endif
