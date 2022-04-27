@@ -219,7 +219,7 @@ void algo_dijkstra(pgraphe_t g, int r)
 
  //initialisation 
  Initialiser(g,r);
- 
+
 
  // traitement 
 
@@ -266,11 +266,11 @@ int min(pgraphe_t g,int r)
 return distance_min;
 }
 
-void Initialiser(pgraphe_t g,int r){
-  psommet_t s1 = chercher_sommet(g , r);
-  s1->distance=0; 
+void Initialiser(pgraphe_t g,int r)
+{
   psommet_t debut = chercher_sommet(g, r);
 	debut->explore = 1;
+  debut->distance =0;
 
 	pfile_t	f_sommets = creer_file();
 	enfiler(f_sommets, debut);
