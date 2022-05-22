@@ -293,4 +293,7 @@ int regulier(pgraphe_t g)
 */
 int elementaire(pgraphe_t g, chemin_t c)
 {
+  int nbr_sommet=nombre_sommets(g);
+  int marque[nbr_sommet];
+  
 }
