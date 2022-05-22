@@ -1,9 +1,9 @@
 #include "graphe.h"
 
-#define MAX_FILE_SIZE       32
+#define MAX_FILE_SIZE 32
 
-
-typedef struct {
+typedef struct
+{
     int tete;
     int queue;
     psommet_t Tab[MAX_FILE_SIZE];
@@ -20,3 +20,5 @@ int file_pleine(pfile_t f);
 psommet_t defiler(pfile_t f);
 
 int enfiler(pfile_t f, psommet_t p);
+
+psommet_t extraire(pfile_t f);

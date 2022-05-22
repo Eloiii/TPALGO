@@ -173,7 +173,7 @@ void afficher_graphe_largeur(pgraphe_t g, int r)
   while (!file_vide(f_sommets))
   {
     psommet_t current = defiler(f_sommets);
-    printf("%d\n", current->label);
+    printf("%d | ", current->label);
 
     parc_t current_arc = current->liste_arcs;
     while (current_arc != NULL)
@@ -186,6 +186,7 @@ void afficher_graphe_largeur(pgraphe_t g, int r)
       current_arc = current_arc->arc_suivant;
     }
   }
+  printf("\n");
   return;
 }
 
@@ -213,159 +214,539 @@ void afficher_graphe_profondeur(pgraphe_t g, int r)
   printf("\n");
 }
 
-void algo_dijkstra(pgraphe_t g, int r)
+/**
+ * Algorithme de Dijkstra : trouve les plus courts chemins
+ * Pour cela, il faut d'abord initialiser le graphe
+ */
+
+void enfileSommet(pgraphe_t g, pfile_t fap)
 {
-  /*
-    algorithme de dijkstra
-    des variables ou des chanmps doivent etre ajoutees dans les structures.
-  */
-
- //initialisation 
- Initialiser(g,r);
-
-
- // traitement 
-
-
-  return;
-}
-void relax(pgraphe_t g, int q, int r)
-{
-   psommet_t s1 = chercher_sommet(g , q);
-   psommet_t s2 = chercher_sommet(g , r);
-   parc_t arc = s1->liste_arcs; 
-   int distance_arc;
-   while(arc != NULL)
-   {
-     if(arc->dest == s2)
-     {
-       distance_arc = arc->poids;
-     }
-     arc = arc->arc_suivant;
-   }
-
-   if(s1->distance + distance_arc  < s2->distance)
-   {
-     s2->distance = s1->distance + distance_arc;
-     s2->marquer=true;
-   }
-   return;
-}
-
-int min(pgraphe_t g,int r)
-{
-  psommet_t s1 = chercher_sommet(g , r);
-  parc_t arc = s1->liste_arcs;
-  int distance_min=INT_MAX;
-  while(arc !=NULL)
+  psommet_t sommet = g;
+  if (sommet != NULL && sommet->couleur != 1)
   {
-    psommet_t s2 = arc->dest;
-    if(s2->distance < distance_min)
+    sommet->couleur = 1;
+    enfiler(fap, g);
+    g->longueur = INT_MAX;
+    g->parent = NULL;
+    parc_t arcs = sommet->liste_arcs;
+    while (arcs != NULL && arcs->dest != NULL)
     {
-      distance_min= s2->distance;  
+      enfileSommet(arcs->dest, fap);
+      arcs = arcs->arc_suivant;
     }
-    arc = arc->arc_suivant;
   }
-return distance_min;
 }
 
-void Initialiser(pgraphe_t g,int r)
+void initialisation(pgraphe_t g, pfile_t fap)
 {
-  psommet_t debut = chercher_sommet(g, r);
-	debut->explore = 1;
-  debut->distance =0;
+  init_couleur_sommet(g);
+  enfileSommet(g, fap);
 
-	pfile_t	f_sommets = creer_file();
-	enfiler(f_sommets, debut);
-	while(!file_vide(f_sommets)) {
-		psommet_t current = defiler(f_sommets);
-    if(current->label != r){
-	   	current->distance=INT_MAX;
-    }
-		
-		parc_t current_arc = current->liste_arcs;
-		while(current_arc != NULL){
-			if(!current_arc->dest->explore) {
-				enfiler(f_sommets, current_arc->dest);
-				current_arc->dest->explore = 1;
-			}
-			current_arc = current_arc->arc_suivant;
-		}
-	}	
-}
+  g->longueur = 0;
+  g->parent = NULL;
+  g = g->sommet_suivant;
 
-
-// ======================================================================
-
-int degre_sortant_sommet(pgraphe_t g, psommet_t s)
-{
-  /*
-    Cette fonction retourne le nombre d'arcs sortants
-    du sommet n dans le graphe g
-  */
-
-  return 0;
-}
-
-int degre_entrant_sommet(pgraphe_t g, psommet_t s)
-{
-  /*
-    Cette fonction retourne le nombre d'arcs entrants
-    dans le noeud n dans le graphe g
-  */
-
-  return 0;
-}
-
-int degre_maximal_graphe(pgraphe_t g)
-{
-  /*
-    Max des degres des sommets du graphe g
-  */
-
-  return 0;
-}
-
-int degre_minimal_graphe(pgraphe_t g)
-{
-  /*
-    Min des degres des sommets du graphe g
-  */
-
-  return 0;
-}
-
-int independant(pgraphe_t g)
-{
-  /* Les aretes du graphe n'ont pas de sommet en commun */
-
-  return 0;
-}
-
-int complet(pgraphe_t g)
-{
-  /* Toutes les paires de sommet du graphe sont jointes par un arc */
-
-  return 0;
-}
-
-int regulier(pgraphe_t g)
-{
-  /*
-     graphe regulier: tous les sommets ont le meme degre
-     g est le ponteur vers le premier sommet du graphe
-     renvoie 1 si le graphe est régulier, 0 sinon
-  */
-
-  return 0;
+  while (g != NULL)
+  {
+    g->longueur = INT_MAX;
+    g->parent = NULL;
+    g = g->sommet_suivant;
+  }
 }
 
 /*
-  placer les fonctions de l'examen 2017 juste apres
+ Permet de relacher un arc si un parcours plus court est trouvé
+ */
+void relachement(psommet_t sommet, parc_t arc)
+{
+  psommet_t dest = arc->dest;
+  if (dest->longueur > sommet->longueur + arc->poids)
+  {
+    dest->longueur = sommet->longueur + arc->poids;
+    dest->parent = sommet;
+  }
+}
+
+void algo_dijkstra(pgraphe_t g, int sommet_depart)
+{
+  pfile_t fap = creer_file();
+  psommet_t sommetPlusPetit;
+  initialisation(g, fap);
+  while (!file_vide(fap))
+  {
+    sommetPlusPetit = extraire(fap);
+    parc_t arcsSortants = sommetPlusPetit->liste_arcs;
+    while (arcsSortants != NULL)
+    {
+      relachement(sommetPlusPetit, arcsSortants);
+      arcsSortants = arcsSortants->arc_suivant;
+    }
+  }
+}
+
+/**
+ Affiche les plus courts chemin de l'algo de Dijkstra
+ */
+void afficherDijkstra(pgraphe_t g, int sommet_depart)
+{
+  printf("Voici Diskstra ");
+  init_couleur_sommet(g);
+  algo_dijkstra(g, sommet_depart);
+  psommet_t sommet = g;
+  psommet_t parent = g;
+  while (sommet != NULL)
+  {
+    parent = sommet;
+
+    while (parent != NULL)
+    {
+      if (parent != g)
+      {
+        printf("%i <- ", parent->label);
+        if (sommet->longueur == 2147483647) // maximum int
+        {
+          printf("inaccessible");
+        }
+      }
+      else
+      {
+        printf("%i ", parent->label);
+      }
+      parent = parent->parent;
+    }
+
+    printf("\n");
+    sommet = sommet->sommet_suivant;
+  }
+}
+
+// ======================================================================
+/*
+    Cette fonction retourne le nombre d'arcs sortants
+    du sommet n dans le graphe g
+  */
+int degre_sortant_sommet(pgraphe_t g, psommet_t s)
+{
+  int cmpt = 0;
+  if (s == NULL)
+  {
+    return 0;
+  }
+  else
+  {
+    parc_t arc = s->liste_arcs;
+    while (arc)
+    {
+      arc = arc->arc_suivant;
+      cmpt++;
+    }
+  }
+  return cmpt;
+}
+/*
+  Cette fonction retourne le nombre d'arcs entrants
+  dans le noeud n dans le graphe g
 */
+int degre_entrant_sommet(pgraphe_t g, psommet_t s)
+{
+  int cmpt = 0;
+  if (s == NULL)
+  {
+    return cmpt;
+  }
+  else
+  {
+    pgraphe_t noeudCourant = g;
+    while (noeudCourant)
+    {
+      parc_t listArcs = noeudCourant->liste_arcs;
+      while (listArcs) // on parcourt les noeuds
+      {
+        if (listArcs->dest == s)
+        {
+          cmpt++;
+        }
+        listArcs = listArcs->arc_suivant;
+      }
+      noeudCourant = noeudCourant->sommet_suivant;
+    }
+  }
+  return cmpt;
+}
+
+/*
+   Max des degres des sommets du graphe g
+ */
+int degre_maximal_graphe(pgraphe_t g)
+{
+  if (g == NULL)
+  {
+    return 0;
+  }
+  else
+  {
+    pgraphe_t noeudCourant = g;
+    int degresMax = degre_entrant_sommet(g, g) + degre_sortant_sommet(g, g);
+
+    while (noeudCourant)
+    {
+      int deg = degre_entrant_sommet(g, noeudCourant) + degre_sortant_sommet(g, noeudCourant);
+      if (deg > degresMax)
+      {
+        degresMax = deg;
+      }
+      noeudCourant = noeudCourant->sommet_suivant;
+    }
+    return degresMax;
+  }
+}
+
+/*
+   Min des degres des sommets du graphe g
+ */
+int degre_minimal_graphe(pgraphe_t g)
+{
+  if (g == NULL)
+  {
+    return 0;
+  }
+  else
+  {
+    pgraphe_t noeudCourant = g;
+    int degresMin = degre_entrant_sommet(g, g) + degre_sortant_sommet(g, g);
+
+    while (noeudCourant)
+    {
+      int deg = degre_entrant_sommet(g, noeudCourant) + degre_sortant_sommet(g, noeudCourant);
+      if (deg < degresMin)
+      {
+        degresMin = deg;
+      }
+      noeudCourant = noeudCourant->sommet_suivant;
+    }
+    return degresMin;
+  }
+}
+
+/* Les aretes du graphe n'ont pas de sommet en commun */
+
+int independant(pgraphe_t g)
+{
+  psommet_t sommetCourant;
+  sommetCourant = g;
+  while (sommetCourant && (degre_entrant_sommet(g, sommetCourant) + degre_sortant_sommet(g, sommetCourant) < 2))
+  {
+    // on a un sommet en commun si il y a plus que 2 arcs
+    sommetCourant = sommetCourant->sommet_suivant;
+  }
+  if (sommetCourant == NULL)
+  {
+    return 0;
+  }
+  else
+  {
+    return 1;
+  }
+}
+
+/*
+ Fonction qui indique si les deux sommets passés en paramètre sont connectés dans les deux sens
+*/
+
+int connecter(psommet_t s1, psommet_t s2)
+{
+  parc_t listArc = s1->liste_arcs;
+  while (listArc != NULL && listArc->dest != s2)
+  {
+    listArc = listArc->arc_suivant;
+  }
+  if (listArc != NULL && listArc->dest == s2)
+  {
+    listArc = s2->liste_arcs;
+    while (listArc != NULL && listArc->dest != s1)
+    {
+      listArc = listArc->arc_suivant;
+    }
+    if (listArc == NULL || listArc->dest != s1)
+    {
+      return 0;
+    }
+  }
+  else
+  {
+    return 0;
+  }
+  return 1;
+}
+
+/* Toutes les paires de sommet du graphe sont jointes par un arc */
+
+int complet(pgraphe_t g)
+{
+  int complet = 1;
+  psommet_t sommetCourant = g;
+  while (sommetCourant && complet)
+  {
+    complet = connecter(sommetCourant, sommetCourant->sommet_suivant);
+    sommetCourant = sommetCourant->sommet_suivant;
+  }
+  return complet;
+}
+
+/*
+     graphe regulier: tous les sommets ont le meme degre
+     g est le ponteur vers le premier sommet du graphe
+     renvoie 1 si le graphe est régulier, 0 sinon
+*/
+
+int regulier(pgraphe_t g)
+{
+  psommet_t base = g;
+  int degresBase = degre_sortant_sommet(g, base) + degre_entrant_sommet(g, base);
+  while (base)
+  {
+    if (degre_sortant_sommet(g, base) + degre_entrant_sommet(g, base) != degresBase)
+    {
+      return 0;
+    }
+    base = base->sommet_suivant;
+  }
+  return 1;
+}
+
+/*
+====================================================================================================================
+=============================================FONCTIONS EXAM 2017====================================================
+====================================================================================================================
+
+
+  Fonction qui vérifie que le chemin est élémentaire cad verifie que le chemin ne passe pas deux fois par le même sommet
+*/
+
 int elementaire(pgraphe_t g, chemin_t c)
 {
-  int nbr_sommet=nombre_sommets(g);
-  int marque[nbr_sommet];
-  
+  int nbSommet = nombre_sommets(g);
+  int visite[nbSommet];            // liste qui contiendra les sommets visités
+  plistArc_t courant = c.listArcs; // on récupère le premier element de la liste d'arc representant le chemin
+  int cmpt = 0;                    // pour se déplacer dans le tableau d'arcs déjà vus
+  while (courant != NULL)          // tant qu'on a un arc dans le chemin
+  {
+    for (int i = 0; i < cmpt; i++)
+    {
+      if (visite[i] == courant->arcDepart->dest->label)
+      {
+        // Le chemin n'est pas élémentaire
+        return 0;
+      }
+    }
+    visite[cmpt] = courant->arcDepart->dest->label;
+    courant = courant->nextArc; // on passe à l'arc suivant
+    cmpt++;
+  }
+  return 1; // Le chemin est élémentaire
+}
+/*
+====================================================================================================================
+=============================================FONCTION SIMPLE========================================================
+====================================================================================================================
+
+
+  Fonction qui vérifie que le chemin est simple cad vérifie que le chemin ne passe pas deux fois par le même arc
+*/
+int simple(pgraphe_t g, chemin_t c)
+{
+  int nbArc = nombre_arcs(g);
+  parc_t visite[nbArc];            // liste qui contiendra les arcs déjà visités
+  plistArc_t courant = c.listArcs; // on récupère le premier element de la liste d'arc representant le chemin
+  int cmpt = 0;
+  while (courant != NULL)
+  {
+    for (int i = 0; i < cmpt; i++)
+    {
+      if (visite[i] == courant->arcDepart)
+      {
+        return 0; // Le chemin n'est pas simple
+      }
+    }
+    visite[cmpt] = courant->arcDepart;
+    courant = courant->nextArc;
+    cmpt++;
+  }
+  return 1; // Le chemin est simple
+}
+/*
+====================================================================================================================
+=============================================FONCTION CHEMIN EULERIEN===============================================
+====================================================================================================================
+
+  Fonction eulérien qui vérifie qu'un chemin possède tous les arcs du graphe.
+  Pour cette fonction, on a besoin de vérifier que le chemin est simple mais aussi correct
+  Il faut aussi que le nombre d'arcs du chemin = nombre d'arcs du graphe
+  On va alors implementer 2 fonctions auxiliaires:
+    correct() qui vérifie que le chemin est correct
+    nbr_arc_chemin() qui calcule le nombre d'arc dans le chemin
+*/
+
+int correct(chemin_t c)
+{
+  plistArc_t courantArc = c.listArcs;
+  parc_t courant = NULL;
+  int nbr = 0;
+  while (courantArc)
+  {
+    courant = courantArc->arcDepart->dest->liste_arcs;
+    if (courantArc->nextArc != NULL)
+    {
+      while (courant != NULL && courant != courantArc->nextArc->arcDepart)
+      {
+        courant = courant->arc_suivant;
+      }
+      if (courant == NULL)
+      {
+        return 0;
+      }
+    }
+    courantArc = courantArc->nextArc;
+    nbr++;
+  }
+  return 1;
+}
+
+int nbr_arc_chemin(chemin_t c)
+{
+  plistArc_t courant = c.listArcs;
+  int nbr = 0;
+  if (courant == NULL)
+  {
+    return nbr;
+  }
+  nbr++;
+  while (courant->nextArc)
+  {
+    courant = courant->nextArc;
+    nbr++;
+  }
+  return nbr;
+}
+
+int eulerien(pgraphe_t g, chemin_t c)
+{
+  int nb = nbr_arc_chemin(c);
+  if ((nb != nombre_arcs(g)) || !correct(c) || !simple(g, c))
+  {
+    return 0;
+  }
+  return 1;
+}
+/*
+====================================================================================================================
+=========================================FONCTION CHEMIN HAMILTONIEN================================================
+====================================================================================================================
+
+Fonction Hamiltonien qui vérifie qu'un chemin possède tous les sommets du graphe.
+Pour cette fonction, on a besoin de vérifier que le chemin est non simple et élémentaire
+Il faut aussi que le nombre de sommets du chemin = nombre de sommets du graphe
+On va implementer une fonction auxiliaire qui va vérifier que le sommet sur lequel on passe ne fait pas déjà
+parti des sommets visités.
+*/
+
+int pas_visiter(psommet_t *sommet_visiter, psommet_t sommetCourant, int nbSommet)
+{
+  for (int i = 0; i < nbSommet; i++)
+  {
+    if (sommetCourant == sommet_visiter[i])
+    {
+      return 0;
+    }
+  }
+  return 1;
+}
+
+int hamiltonien(pgraphe_t g, chemin_t c)
+{
+  psommet_t Courant = g;
+  int nbr_sommet = nombre_sommets(g);
+  psommet_t sommet_visiter[nbr_sommet]; // tableau qui contiendra les sommets visités
+  int index = 0;
+  Courant = c.depart;
+  sommet_visiter[index] = Courant;
+  index++;
+  plistArc_t arcCourant = c.listArcs;
+  while (arcCourant != NULL)
+  {
+    sommet_visiter[index] = arcCourant->arcDepart->dest;
+    index++;
+    arcCourant = arcCourant->nextArc;
+  }
+  Courant = g;
+  while (Courant != NULL)
+  {
+    if (pas_visiter(sommet_visiter, Courant, nbr_sommet))
+    {
+      return 0;
+    }
+    Courant = Courant->sommet_suivant;
+  }
+  return 1;
+}
+/*
+====================================================================================================================
+=============================================FONCTIONS GRAPHE EULERIEN==============================================
+====================================================================================================================
+
+  Fonction graphe_eulerien qui vériein qu'il existe au moins un chemin qui soit Eulérien
+  Cette fonction implique de savoir si le graphe est connexe ou non
+  Un graphe orienté connexe est une graphe dans le lequel tout les sommets
+  sont accessible depuis tout les autres sommets.
+  Il suffira alors de vérifier que le graphe connexe possède uniquement des sommets pairs
+  (propriété des graphes connexes)
+ */
+int graphe_connexe(pgraphe_t g)
+{
+  int nbSommet = 0;
+  psommet_t sommetCourant = g;
+  while (sommetCourant != NULL)
+  {
+    nbSommet++;
+    sommetCourant = sommetCourant->sommet_suivant;
+  }
+
+  pfile_t fap = creer_file();
+  int nbr_elem_file = 0;
+  sommetCourant = g;
+  while (sommetCourant != NULL)
+  {
+    init_couleur_sommet(g);
+    enfileSommet(g, fap);
+    nbr_elem_file++;
+    if (nbr_elem_file != nbSommet)
+    {
+      return 0;
+    }
+    sommetCourant = sommetCourant->sommet_suivant;
+    detruire_file(fap);
+    fap = creer_file();
+  }
+  return 1;
+}
+
+int graphe_eulerien(pgraphe_t g)
+{
+  psommet_t sommetCourant = g;
+  if (!graphe_connexe(g))
+  {
+    return 0;
+  }
+  int estEulerien = 1;
+  sommetCourant = g;
+  while (sommetCourant != NULL && estEulerien)
+  {
+    int degree = degre_entrant_sommet(g, sommetCourant) + degre_sortant_sommet(g, sommetCourant);
+    if (degree % 2 != 0)
+    {
+      estEulerien = 0;
+    }
+    sommetCourant = sommetCourant->sommet_suivant;
+  }
+  return estEulerien;
 }

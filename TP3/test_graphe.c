@@ -3,6 +3,20 @@
 
 #include "graphe.h"
 
+char *trad(int bool)
+{
+  char *rep;
+  if (bool == 1)
+  {
+    rep = "oui";
+  }
+  else
+  {
+    rep = "non";
+  }
+  return rep;
+}
+
 int main(int argc, char **argv)
 {
   pgraphe_t g;
@@ -38,4 +52,11 @@ int main(int argc, char **argv)
   afficher_graphe_profondeur(g, 1);
   printf("Parcours en largeur :\n");
   afficher_graphe_largeur(g, 1);
+  // afficherDijkstra(g, 1); PROBLEME DIJKSTRA
+  printf("Degre maximal du graphe: %d\n", degre_maximal_graphe(g));
+  printf("Degre minimal du graphe: %d\n", degre_minimal_graphe(g));
+
+  printf("Le graphe est Connexe ? %s\n", trad(graphe_connexe(g)));
+
+  printf("Le graphe est Eulérien ? %s\n", trad(graphe_eulerien(g)));
 }
