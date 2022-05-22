@@ -220,8 +220,80 @@ void algo_dijkstra(pgraphe_t g, int r)
     des variables ou des chanmps doivent etre ajoutees dans les structures.
   */
 
+ //initialisation 
+ Initialiser(g,r);
+
+
+ // traitement 
+
+
   return;
 }
+void relax(pgraphe_t g, int q, int r)
+{
+   psommet_t s1 = chercher_sommet(g , q);
+   psommet_t s2 = chercher_sommet(g , r);
+   parc_t arc = s1->liste_arcs; 
+   int distance_arc;
+   while(arc != NULL)
+   {
+     if(arc->dest == s2)
+     {
+       distance_arc = arc->poids;
+     }
+     arc = arc->arc_suivant;
+   }
+
+   if(s1->distance + distance_arc  < s2->distance)
+   {
+     s2->distance = s1->distance + distance_arc;
+     s2->marquer=true;
+   }
+   return;
+}
+
+int min(pgraphe_t g,int r)
+{
+  psommet_t s1 = chercher_sommet(g , r);
+  parc_t arc = s1->liste_arcs;
+  int distance_min=INT_MAX;
+  while(arc !=NULL)
+  {
+    psommet_t s2 = arc->dest;
+    if(s2->distance < distance_min)
+    {
+      distance_min= s2->distance;  
+    }
+    arc = arc->arc_suivant;
+  }
+return distance_min;
+}
+
+void Initialiser(pgraphe_t g,int r)
+{
+  psommet_t debut = chercher_sommet(g, r);
+	debut->explore = 1;
+  debut->distance =0;
+
+	pfile_t	f_sommets = creer_file();
+	enfiler(f_sommets, debut);
+	while(!file_vide(f_sommets)) {
+		psommet_t current = defiler(f_sommets);
+    if(current->label != r){
+	   	current->distance=INT_MAX;
+    }
+		
+		parc_t current_arc = current->liste_arcs;
+		while(current_arc != NULL){
+			if(!current_arc->dest->explore) {
+				enfiler(f_sommets, current_arc->dest);
+				current_arc->dest->explore = 1;
+			}
+			current_arc = current_arc->arc_suivant;
+		}
+	}	
+}
+
 
 // ======================================================================
 
