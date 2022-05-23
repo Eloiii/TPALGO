@@ -8,6 +8,7 @@ pfile_t creer_file()
     pfile_t file = malloc(sizeof(file_t));
     file->tete = -1;
     file->queue = -1;
+    file->nbr_elem = 0;
     return file;
 }
 
@@ -39,6 +40,7 @@ psommet_t defiler(pfile_t f)
         f->tete = -1;
         f->queue = -1;
     }
+    f->nbr_elem--;
     return removed;
 }
 
@@ -50,6 +52,7 @@ int enfiler(pfile_t f, psommet_t p)
         f->tete = 0;
     f->queue = (f->queue + 1) % MAX_FILE_SIZE;
     f->Tab[f->queue] = p;
+    f->nbr_elem++;
     return 1;
 }
 

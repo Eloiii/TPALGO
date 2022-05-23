@@ -165,6 +165,7 @@ int colorier_graphe(pgraphe_t g)
 
 void afficher_graphe_largeur(pgraphe_t g, int r)
 {
+  printf("Voici le parcours en largeur: ");
   psommet_t debut = chercher_sommet(g, r);
   debut->explore = 1;
 
@@ -713,14 +714,12 @@ int graphe_connexe(pgraphe_t g)
   }
 
   pfile_t fap = creer_file();
-  int nbr_elem_file = 0;
   sommetCourant = g;
   while (sommetCourant != NULL)
   {
     init_couleur_sommet(g);
     enfileSommet(g, fap);
-    nbr_elem_file++;
-    if (nbr_elem_file != nbSommet)
+    if (fap->nbr_elem != nbSommet)
     {
       return 0;
     }
