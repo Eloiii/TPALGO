@@ -100,6 +100,7 @@ void test_principal(pgraphe_t g)
   nc = colorier_graphe(g);
 
   printf("Nombre chromatique graphe = %d\n", nc);
+  printf("\n");
 
   ecrire_graphe_colorie(g);
   printf("\n");
@@ -110,11 +111,18 @@ void test_principal(pgraphe_t g)
   afficher_graphe_largeur(g, g->label);
   printf("\n");
 
-  // afficherDijkstra(g, 1); PROBLEME DIJKSTRA
-  printf("Degre maximal du graphe: %d\n", degre_maximal_graphe(g));
-  printf("Degre minimal du graphe: %d\n", degre_minimal_graphe(g));
-  printf("\n");
+  afficherDijkstra(g, g->label);
+  ecrire_deg_entrant(g);
+  ecrire_deg_sortant(g);
 
+  printf("\nDegre maximal du graphe: %d\n", degre_maximal_graphe(g));
+  printf("Degre minimal du graphe: %d\n\n", degre_minimal_graphe(g));
+
+  printf("La distance entre %i et 3 : %i\n", g->label, distance(g, g->label, 3));
+  printf("L'excentricité : %i\n", excentricite(g, g->label));
+  printf("Le diametre est de %i\n\n", diametre(g));
+
+  printf("Le graphe est indépendant ? %s\n", trad(independant(g)));
   printf("Le graphe est Connexe ? %s\n", trad(graphe_connexe(g)));
   printf("Le graphe est Eulérien ? %s \n", trad(graphe_eulerien(g)));
   printf("Le graphe est Hamiltonien ? %s \n", trad(graphe_hamiltonien(g)));
@@ -147,31 +155,7 @@ int main(int argc, char **argv)
   printf("nombre de sommets du graphe %d nombre arcs %d \n", nombre_sommets(g), nombre_arcs(g));
   fflush(stdout);
 
-  ecrire_graphe(g);
-
-  int nc = colorier_graphe(g);
-
-  printf("nombre chromatique graphe = %d\n", nc);
-
-  ecrire_graphe_colorie(g);
-  afficher_graphe_profondeur(g, 1);
-  printf("Parcours en largeur :\n");
-  afficher_graphe_largeur(g, 1);
-  afficherDijkstra(g, g->label); //PROBLEME DIJKSTRA
-  printf("Degre maximal du graphe: %d\n", degre_maximal_graphe(g));
-  printf("Degre minimal du graphe: %d\n", degre_minimal_graphe(g));
-
-  printf("Le graphe est Connexe ? %s\n", trad(graphe_connexe(g)));
-
-  printf("Le graphe est Eulérien ? %s\n", trad(graphe_eulerien(g)));
-
-  printf("Le graphe est Hamiltonien ? %s\n", trad(graphe_hamiltonien(g)));
- 
-  printf("Distance entre label 1 et 2 ? %d\n", distance(g, 1, 2));
-
-  printf("Excentricité du label 1 ? %d\n", excentricite(g, 1));
   test_principal(g);
-
   test_eulerien();
   test_hamiltonien();
 }

@@ -83,6 +83,10 @@ int degre_sortant_sommet(pgraphe_t g, psommet_t s);
 
 int degre_entrant_sommet(pgraphe_t g, psommet_t s);
 
+void ecrire_deg_sortant(psommet_t g);
+
+void ecrire_deg_entrant(psommet_t g);
+
 int degre_maximal_graphe(pgraphe_t g);
 
 int degre_minimal_graphe(pgraphe_t g);
@@ -115,9 +119,9 @@ int graphe_eulerien(pgraphe_t g);
 
 int graphe_hamiltonien(pgraphe_t g);
 
-int distance (pgraphe_t, int x, int y);
+int distance(pgraphe_t, int x, int y);
 
-int excentricite (pgraphe_t g, int n);
+int excentricite(pgraphe_t g, int n);
 
 int diametre(pgraphe_t g);
 #endif

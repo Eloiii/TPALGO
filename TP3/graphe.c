@@ -304,7 +304,7 @@ void afficherDijkstra(pgraphe_t g, int sommet_depart)
       if (parent != g)
       {
         printf("%i <- ", parent->label);
-        if (sommet->longueur == INT_MAX) 
+        if (sommet->longueur == INT_MAX)
         {
           printf("inaccessible");
         }
@@ -375,6 +375,33 @@ int degre_entrant_sommet(pgraphe_t g, psommet_t s)
   return cmpt;
 }
 
+void ecrire_deg_entrant(psommet_t g)
+{
+  printf("\nVoici les degrés entrant pour chaque sommet:\n");
+  psommet_t p = g;
+  while (p != NULL)
+  {
+    printf("Sommet %d: ", p->label);
+    printf("%i\n", degre_entrant_sommet(p, chercher_sommet(p, p->label)));
+    p = p->sommet_suivant;
+  }
+  printf("\n");
+  return;
+}
+
+void ecrire_deg_sortant(psommet_t g)
+{
+  printf("\nVoici les degrés sortant pour chaque sommet:\n");
+  psommet_t p = g;
+  while (p != NULL)
+  {
+    printf("Sommet %d: ", p->label);
+    printf("%i\n", degre_sortant_sommet(p, chercher_sommet(p, p->label)));
+    p = p->sommet_suivant;
+  }
+  printf("\n");
+  return;
+}
 /*
    Max des degres des sommets du graphe g
  */
@@ -750,69 +777,80 @@ int graphe_eulerien(pgraphe_t g)
   return estEulerien;
 }
 
-int dejaVisite(psommet_t s, int sommetsVisites[], int nbVisites) {
-	for(int i = 0; i < nbVisites; i++) {
-		if(s->label == sommetsVisites[i])
-			return 1;
-	}
-	return 0;
+int dejaVisite(psommet_t s, int sommetsVisites[], int nbVisites)
+{
+  for (int i = 0; i < nbVisites; i++)
+  {
+    if (s->label == sommetsVisites[i])
+      return 1;
+  }
+  return 0;
 }
 
-int cheminPlusLong(psommet_t s, int nbVisites, int sommetsVisites[]) {
-	if(dejaVisite(s, sommetsVisites, nbVisites) || !s)
-		return nbVisites;
-	sommetsVisites[nbVisites++] = s->label;
-	int visitesCurr = 0;
-	parc_t curr = s->liste_arcs;
-	while(curr) {
-		visitesCurr = cheminPlusLong(curr->dest, nbVisites, sommetsVisites);
-		if(visitesCurr > nbVisites)
-			nbVisites = visitesCurr;
-		curr = curr->arc_suivant;
-	}
-	return nbVisites;
+int cheminPlusLong(psommet_t s, int nbVisites, int sommetsVisites[])
+{
+  if (dejaVisite(s, sommetsVisites, nbVisites) || !s)
+    return nbVisites;
+  sommetsVisites[nbVisites++] = s->label;
+  int visitesCurr = 0;
+  parc_t curr = s->liste_arcs;
+  while (curr)
+  {
+    visitesCurr = cheminPlusLong(curr->dest, nbVisites, sommetsVisites);
+    if (visitesCurr > nbVisites)
+      nbVisites = visitesCurr;
+    curr = curr->arc_suivant;
+  }
+  return nbVisites;
 }
 
-int graphe_hamiltonien(pgraphe_t g) {
-	init_couleur_sommet(g);
-	psommet_t curr = g;
-	int nbSommet = nombre_sommets(g);
-	int sommetsVisites[nbSommet];
-	while(curr){
-		if(nbSommet == cheminPlusLong(curr, 0, sommetsVisites))
-			return 1;
-		curr = curr->sommet_suivant;
-	}
-	return 0;
+int graphe_hamiltonien(pgraphe_t g)
+{
+  init_couleur_sommet(g);
+  psommet_t curr = g;
+  int nbSommet = nombre_sommets(g);
+  int sommetsVisites[nbSommet];
+  while (curr)
+  {
+    if (nbSommet == cheminPlusLong(curr, 0, sommetsVisites))
+      return 1;
+    curr = curr->sommet_suivant;
+  }
+  return 0;
 }
 
-int distance(pgraphe_t g, int x, int y) {
-	algo_dijkstra(g, x);
-	psommet_t Y = chercher_sommet(g, y);
-	return Y->longueur != INT_MAX ? Y->longueur : -1;
+int distance(pgraphe_t g, int x, int y)
+{
+  algo_dijkstra(g, x);
+  psommet_t Y = chercher_sommet(g, y);
+  return Y->longueur != INT_MAX ? Y->longueur : -1;
 }
 
-int excentricite(pgraphe_t g, int n) {
-	psommet_t N = chercher_sommet(g, n);
-	int excentricite = 0;
-	algo_dijkstra(g, n);
-	while(N) {
-		if(N->longueur > excentricite)
-			excentricite = N->longueur;
-		N = N->sommet_suivant;
-	}
-	return excentricite != INT_MAX ? excentricite : -1;
+int excentricite(pgraphe_t g, int n)
+{
+  psommet_t N = chercher_sommet(g, n);
+  int excentricite = 0;
+  algo_dijkstra(g, n);
+  while (N)
+  {
+    if (N->longueur > excentricite)
+      excentricite = N->longueur;
+    N = N->sommet_suivant;
+  }
+  return excentricite != INT_MAX ? excentricite : -1;
 }
 
-int diametre(pgraphe_t g) {
-	psommet_t sommet = g;
-	int excMax = 0;
-	int excentriciteCurr = 0;
-	while(sommet) {
-		excentriciteCurr = excentricite(g, sommet->label);
-		if(excentriciteCurr > excMax || excentriciteCurr == -1)
-			excMax = excentriciteCurr;
-		sommet = sommet->sommet_suivant;
-	}
-	return excMax;
+int diametre(pgraphe_t g)
+{
+  psommet_t sommet = g;
+  int excMax = 0;
+  int excentriciteCurr = 0;
+  while (sommet)
+  {
+    excentriciteCurr = excentricite(g, sommet->label);
+    if (excentriciteCurr > excMax || excentriciteCurr == -1)
+      excMax = excentriciteCurr;
+    sommet = sommet->sommet_suivant;
+  }
+  return excMax;
 }
