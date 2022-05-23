@@ -113,4 +113,11 @@ int graphe_connexe(pgraphe_t g);
 
 int graphe_eulerien(pgraphe_t g);
 
+int graphe_hamiltonien(pgraphe_t g);
+
+int distance (pgraphe_t, int x, int y);
+
+int excentricite (pgraphe_t g, int n);
+
+int diametre(pgraphe_t g);
 #endif
