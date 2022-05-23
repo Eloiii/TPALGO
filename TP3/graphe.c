@@ -290,8 +290,7 @@ void algo_dijkstra(pgraphe_t g, int sommet_depart)
  */
 void afficherDijkstra(pgraphe_t g, int sommet_depart)
 {
-	printf("BONJOUR");
-  printf("Voici Diskstra ");
+  printf("Voici Diskstra \n");
   init_couleur_sommet(g);
   algo_dijkstra(g, sommet_depart);
   psommet_t sommet = g;

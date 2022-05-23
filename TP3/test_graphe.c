@@ -107,9 +107,7 @@ int main(int argc, char **argv)
   afficher_graphe_profondeur(g, 1);
   printf("Parcours en largeur :\n");
   afficher_graphe_largeur(g, 1);
-  printf("bonjout");
-  //afficherDijkstra(g, 1); //PROBLEME DIJKSTRA
-  printf("fini");
+  afficherDijkstra(g, g->label); //PROBLEME DIJKSTRA
   printf("Degre maximal du graphe: %d\n", degre_maximal_graphe(g));
   printf("Degre minimal du graphe: %d\n", degre_minimal_graphe(g));
 
