@@ -47,6 +47,8 @@ void test_eulerien()
   list_arc3->arcDepart = s3->liste_arcs;
   list_arc3->nextArc = NULL;
 
+  printf("Le chemin 1->3->2->1 est-il simple ? %s \n", trad(simple(g, c)));
+  printf("Le chemin 1->3->2->1 est-il elementaire ? %s \n", trad(elementaire(g, c)));
   printf("Le chemin 1->3->2->1 est-il eulerien ? %s \n", trad(eulerien(g, c)));
   printf("Le graphe est Eulérien ? %s \n", trad(graphe_eulerien(g)));
 }
@@ -86,6 +88,8 @@ void test_hamiltonien()
   list_arc4->arcDepart = s4->liste_arcs;
   list_arc4->nextArc = NULL;
 
+  printf("Le chemin 1->2->3->4 est-il simple ? %s \n", trad(simple(g, c)));
+  printf("Le chemin 1->2->3->4 est-il elementaire ? %s \n", trad(elementaire(g, c)));
   printf("Le chemin 1->2->3->4 est-il Hamiltonien ? %s \n", trad(hamiltonien(g, c)));
   printf("Le graphe est Hamiltonien ? %s \n", trad(graphe_hamiltonien(g)));
 }
