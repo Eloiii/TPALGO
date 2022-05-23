@@ -6,6 +6,7 @@ typedef struct
 {
     int tete;
     int queue;
+    int nbr_elem;
     psommet_t Tab[MAX_FILE_SIZE];
 } file_t, *pfile_t;
 
